@@ -1,16 +1,3 @@
-// get sort order
-// things with higher sort orders are rendered last (on top of everything else)
-function sort_order(tile, ignoreType=False) {
-	if (!ignoreType) {
-		switch (tile[3]['type']) {
-			case 'tree':
-				return (sort_order(tile, True) + sort_order((tile[0],tile[1]+1,tile[2],tile[3]), True)) / 2
-        }
-    }
-
-	return ((tile[0] + tile[2]) * -1) + tile[1]
-}
-
 export default class TileDrawer {
 	constructor (ctx, tile_size, outline_width=2) {
 		this.tile_size = tile_size
@@ -18,10 +5,23 @@ export default class TileDrawer {
 		this.ctx.lineWidth = outline_width
     }
 
+	// get sort order
+	// things with higher sort orders are rendered last (on top of everything else)
+	static sort_order(tile, ignoreType=false) {
+		if (!ignoreType) {
+			switch (tile[3]['type']) {
+				case 'tree':
+					return (TileDrawer.sort_order(tile, True) + TileDrawer.sort_order((tile[0],tile[1]+1,tile[2],tile[3]), True)) / 2
+			}
+		}
+
+		return ((tile[0] + tile[2])) + tile[1]
+	}
+
 	// converts 3d coordinates to an isometric grid
 	to_isometric(x, y, z, tile_size) {
 		const iso_x = x * (0.5 * tile_size) + z * (-0.5 * tile_size)
-		const iso_y = x * (0.25 * tile_size) + z * (0.25 * tile_size) + y * (0.5 * tile_size)
+		const iso_y = x * (0.25 * tile_size) + z * (0.25 * tile_size) - y * (0.5 * tile_size)
 		return [iso_x, iso_y]
     }
 
@@ -97,19 +97,17 @@ export default class TileDrawer {
 
 				break
 			case 'liquid':
-				this.ctx.moveTo(x, y - 0.15 * this.tile_size)
-				// draw top face
 				this.ctx.strokeStyle = tile['outline_color']
 				this.ctx.fillStyle = tile['top_face_color']
-				this.draw_top_tile_face(x, y, this.tile_size)
+				this.draw_top_tile_face(x, y + 0.15 * this.tile_size, this.tile_size)
 
 				// draw left side face
 				this.ctx.fillStyle = tile['left_face_color']
-				this.draw_side_tile_face(x, y, this.tile_size, this.tile_size - 0.3 * this.tile_size, 1)
+				this.draw_side_tile_face(x, y + 0.15 * this.tile_size, this.tile_size, this.tile_size - 0.3 * this.tile_size, 1)
 
 				// draw right side face
 				this.ctx.fillStyle = tile['outline_color']
-				this.draw_side_tile_face(x, y, this.tile_size, this.tile_size - 0.3 * this.tile_size, -1)
+				this.draw_side_tile_face(x, y + 0.15 * this.tile_size, this.tile_size, this.tile_size - 0.3 * this.tile_size, -1)
 
 				break
 			case 'grasstop':
@@ -126,17 +124,14 @@ export default class TileDrawer {
 				this.ctx.fillStyle = tile['top_outline_color']
 				this.draw_side_tile_face(x, y, this.tile_size, this.tile_size * 0.3, -1)
 
-				// move cursor down to draw bottom part
-				this.ctx.moveTo(x,y - 0.15 * this.tile_size)
-
 				// draw bottom left face
 				this.ctx.strokeStyle = tile['bottom_outline_color']
 				this.ctx.fillStyle = tile['bottom_side_color']
-				this.draw_side_tile_face(x, y, this.tile_size, this.tile_size * 0.7, 1)
+				this.draw_side_tile_face(x, y + 0.15 * this.tile_size, this.tile_size, this.tile_size * 0.7, 1)
 
 				// draw bottom right face
 				this.ctx.fillStyle = tile['bottom_outline_color']
-				this.draw_side_tile_face(x, y, this.tile_size, this.tile_size * 0.7, -1)
+				this.draw_side_tile_face(x, y + 0.15 * this.tile_size, this.tile_size, this.tile_size * 0.7, -1)
 
 				break
 			case 'tree':
