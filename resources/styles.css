@@ -13,10 +13,11 @@ main {
     justify-content: center;
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
 }
 
 #main-canvas {
     width: 95vh;
     height: 95vh;
-    border: 1px red solid;
+    transition: transform 0.3s ease; 
 }
