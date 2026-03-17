@@ -13,10 +13,12 @@ export default class TileDrawer {
 		switch (t['type']) {
 			case 'tree':
 				// tree is 2 tiles tall, so get the average of the sorting order of the top and bottom part of the tree
-				return ((x + z) + y + (x + z) + (y + 1)) / 2
+				const bottom_tile_order = (x + z) + (0.5 * y)
+				const top_tile_order = (x + z) + (0.5 * y + 1)
+				return (bottom_tile_order + top_tile_order) / 2
 		}
 
-		return (x + z) + y
+		return (x + z) + (0.5 * y)
 	}
 
 	// converts 3d coordinates to an isometric grid

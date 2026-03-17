@@ -4,10 +4,10 @@ import tiles from './tiles.json' with { type: "json" };
 const canvas = document.getElementById('main-canvas');
 const ctx = canvas.getContext("2d");
 
-const tile_size = 100
-const line_width = 7
-const width = 100
-const height = 100
+const tile_size = 20
+const line_width = 1
+const width = 500
+const height = 500
 const biome_zoom = 6
 const canvas_padding = 5
 const height_variance = 9

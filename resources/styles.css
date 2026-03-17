@@ -19,5 +19,5 @@ main {
 #main-canvas {
     width: 95vh;
     height: 95vh;
-    transition: transform 0.3s ease; 
+    transition: scale 0.3s ease; 
 }
