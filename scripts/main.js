@@ -4,76 +4,98 @@ import tiles from './tiles.json' with { type: "json" };
 const canvas = document.getElementById('main-canvas');
 const ctx = canvas.getContext("2d");
 
-
-const grid_width = 100
-const grid_height = 100 
 const tile_size = 100
-const height_variance = 9
+const line_width = 7
+const width = 100
+const height = 100
+const biome_zoom = 6
 const canvas_padding = 5
-const biome_zoom = 25
+const height_variance = 9
+const tree_chance = 0.45
 
-// center plain in the middle of the canvas and resize canvas to fit it
-canvas.width = grid_width * tile_size + (canvas_padding * 2)
-canvas.height = grid_height * tile_size + (canvas_padding * 2)
-ctx.translate((grid_width * tile_size * 0.5) + canvas_padding, (grid_height * tile_size * 0.25) + canvas_padding)
-const drawer = new TileDrawer(ctx, tile_size, 5)
-
-// biome config
+// instantiate stuff
+const drawer = new TileDrawer(ctx, tile_size, line_width)
 noise.seed(Math.random());
 
+// center all tiles on screen
+canvas.width = width * tile_size + (canvas_padding * 2)
+canvas.height = height * tile_size + (canvas_padding * 2)
+ctx.translate((width * tile_size * 0.5) + canvas_padding, (height * tile_size * 0.25) + canvas_padding)
 
-const scene_tiles = []
+// places this tile if GREATER THAN the float
+// water always places below the lowest threshold
+const tile_thresholds = {
+	'peak': 0.7,
+	'mountain': 0.645,
+	'plains': 0.44,
+	'beach': 0.4
+}
 
-// make fatter edges
+
+// make visible edges fatter
 function make_edge(x, y, z, tile) {
-    if (x == grid_width || z == grid_height) {
-        const edge_tile = tile.edge_tile ?? tile
+    if (x == width - 1 || z == height - 1) {
+        const edge_tile = tiles[tile['edge_tile']] ?? tile
         for (let i = 1; i < y; i++) {
-            console.log('a')
             scene_tiles.push([x,y-i,z,edge_tile])
         }
     }
 }
 
-for (let x = 0; x < grid_width; x++) {
-    for (let z = 0; z < grid_height; z++) {
-        const biome_noise_value = (noise.perlin2(x / biome_zoom, z / biome_zoom) + 1) / 2
-        
-        let y = Math.max(Math.floor(biome_noise_value * height_variance), 3)
-        
-        let tile
-        if (biome_noise_value > 0.7) {
-            tile = tiles['dark_stone']
 
-            y += 2
-            scene_tiles.push([x,y-1,z,tiles['dark_stone']])
-            scene_tiles.push([x,y-2,z,tiles['dark_stone']])
-        } else if (biome_noise_value > 0.645) {
-            tile = tiles['stone']
+// create list of tiles
+const scene_tiles = []
+for (let x = 0; x < height; x++) {
+	for (let z = 0; z < width; z++) {
+		// get noise values and make them between 0 and 1
+		const biome_noise_value = (noise.perlin2(x/(width / biome_zoom), z/(height / biome_zoom)) + 1) / 2
+		const forest_noise_value = (noise.perlin2(x/(width / biome_zoom), z/(height / biome_zoom) + 50) + 1) / 2
 
-            y += 1
-            scene_tiles.push([x,y-1,z,tiles['stone']])
-        } else if (biome_noise_value > 0.44) {
-            tile = tiles['grass']
-            
-            // account for water gap when going from grass straight to water
-            if (biome_noise_value < 0.6) {
-                scene_tiles.push([x,y-1,z,tiles['dirt']])
+		// get y value of tile from noise
+		// this also centers the terrain on the screen
+		let y = Math.max(Math.floor(biome_noise_value * height_variance), 3)
+
+		// get type of tile from noise values
+		// also tweaks y values to make mountains a little taller
+		let tile
+		if (biome_noise_value > tile_thresholds['peak']) {
+			tile = tiles['dark_stone']
+			y += 2
+			scene_tiles.push([x,y-1,z,tile])
+			scene_tiles.push([x,y-2,z,tile])
+
+        } else if (biome_noise_value > tile_thresholds['mountain']) {
+			tile = tiles['stone']
+			y += 1
+			scene_tiles.push([x,y-1,z,tile])
+
+        } else if (biome_noise_value > tile_thresholds['plains']) {
+			tile = tiles['grass']
+
+			// place trees in forests
+			if (forest_noise_value < 0.5 && Math.random() < tree_chance) {
+				scene_tiles.push([x,y+1,z,tiles['tree']])
             }
-        } else if (biome_noise_value > 0.4) {
-            tile = tiles['sand']
+
+			// account for water gap when going from grass straight to water
+			if (biome_noise_value > 0.46) {
+				scene_tiles.push([x,y-1,z,tiles['dirt']])
+            }
+
+        } else if (biome_noise_value > tile_thresholds['beach']) {
+			tile = tiles['sand']
         } else {
-            tile = tiles['water']
+			tile = tiles['water']
         }
 
-        make_edge(x, y, z, tile)
-        scene_tiles.push([x,y,z,tile])
+		make_edge(x,y,z,tile)
+		scene_tiles.push([x,y,z,tile])
     }
 }
 
-const sorted_tiles = scene_tiles.sort((a,b) => TileDrawer.sort_order(a) > TileDrawer.sort_order(b) ? 1 : -1)
+// makes sure sorting orders are correct
+const sorted_tiles = scene_tiles.sort((a, b) => TileDrawer.sort_order(b) < TileDrawer.sort_order(a) ? 1 : -1)
 
 for (let tile of sorted_tiles) {
-    const [x,y,z,t] = tile
-    drawer.draw_tile(x,y,z,t)
+	drawer.draw_tile(tile[0],tile[1],tile[2],tile[3])
 }

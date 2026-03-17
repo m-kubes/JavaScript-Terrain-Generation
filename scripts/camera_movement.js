@@ -3,7 +3,7 @@ const canvas = document.getElementById('main-canvas');
 let currentZoom = 1;
 const minZoom = 0.5;
 const maxZoom = 10;
-const stepSize = 0.1;
+const stepSize = 0.3;
 
 
 document.addEventListener("wheel", function(event) {
