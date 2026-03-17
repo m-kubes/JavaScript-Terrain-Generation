@@ -8,14 +8,15 @@ export default class TileDrawer {
 	// get sort order
 	// things with higher sort orders are rendered last (on top of everything else)
 	static sort_order(tile, ignoreType=false) {
-		if (!ignoreType) {
-			switch (tile['type']) {
-				case 'tree':
-					return (this.sort_order(tile, True) + this.sort_order((tile[0],tile[1]+1,tile[2],tile[3]), True)) / 2
-			}
+		const [x,y,z,t] = tile
+
+		switch (t['type']) {
+			case 'tree':
+				// tree is 2 tiles tall, so get the average of the sorting order of the top and bottom part of the tree
+				return ((x + z) + y + (x + z) + (y + 1)) / 2
 		}
 
-		return ((tile[0] + tile[2])) + tile[1]
+		return (x + z) + y
 	}
 
 	// converts 3d coordinates to an isometric grid
