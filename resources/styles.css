@@ -17,7 +17,12 @@ main {
 }
 
 #main-canvas {
+    z-index: -1;
     width: 95vh;
     height: 95vh;
     transition: scale 0.3s ease; 
+}
+
+#generating_label {
+    display: none;
 }
