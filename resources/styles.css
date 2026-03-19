@@ -1,6 +1,19 @@
+:root {
+    --black: #000;
+    --light-gray: #819796;
+    --mid-gray: #577277;
+    --dark-gray: #394a50;
+}
+
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+p, label, h1, button {
+    font-family: "Saira", sans-serif;
+    color: #394a50;
 }
 
 body {
@@ -24,17 +37,43 @@ main {
 }
 
 #gen_form {
-    padding: 2rem;
-    width: 10rem;
+    width: 12%;
+    position: absolute;
+    padding: 1.5rem;
+    top: 1rem;
+    left: 1rem;
     display: flex;
     flex-direction: column;
-    position: absolute;
-    top: 0;
-    left: 0;
+    gap: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid var(--dark-gray);
 }
 
-#gen_form input {
-    margin-bottom: 20px;
+#gen_form h1 {
+    font-size: 150%;
+}
+
+#gen_form label {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+#gen_form button[type='submit'] {
+    margin-top: 1rem;
+    border-radius: 10px;
+    border-width: 1px;
+    width: 75%;
+    align-self: center;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: background-color ease 0.25s;
+}
+
+#gen_form button[type='submit']:hover {
+    cursor: pointer;
+    background-color: #cccccc;
 }
 
 #generating_label {

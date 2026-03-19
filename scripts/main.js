@@ -78,7 +78,7 @@ function generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance
 				}
 
 				// account for water gap when going from grass straight to water
-				if (biome_noise_value > 0.46) {
+				if (biome_noise_value > 0.45) {
 					scene_tiles.push([x,y-1,z,tiles['dirt']])
 				}
 
@@ -113,16 +113,16 @@ function generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance
 function get_form_inputs() {
 	// defaults
 	let grid_size = document.getElementById('grid_size').value || 50
-	let biome_zoom = 15 - document.getElementById('biome_size').value || 6
+	let biome_zoom = -document.getElementById('biome_size').value + 31 || 6
 	let height_variance = document.getElementById('height_variance').value || 9
 	let tree_chance = document.getElementById('tree_density').value || 0.45
 	let canvas_padding = 5
 
 	let tile_thresholds = {
-		'peak': 0.7,
-		'mountain': 0.645,
-		'plains': 0.44,
-		'beach': 0.4
+		'peak': document.getElementById('peak').value || 0.7,
+		'mountain': document.getElementById('mountains').value || 0.645,
+		'plains': document.getElementById('plains').value || 0.44,
+		'beach': document.getElementById('beach').value || 0.4
 	}
 
 	return [grid_size, biome_zoom, height_variance, tree_chance, canvas_padding, tile_thresholds]
