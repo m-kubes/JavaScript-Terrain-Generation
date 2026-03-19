@@ -23,6 +23,24 @@ main {
     transition: scale 0.3s ease; 
 }
 
+#gen_form {
+    padding: 2rem;
+    width: 10rem;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#gen_form input {
+    margin-bottom: 20px;
+}
+
 #generating_label {
-    display: none;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
