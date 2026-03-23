@@ -82,7 +82,7 @@ export default class TileDrawer {
 
 
 	// all the math and color stuff needed to draw a tile
-	// currently only accounts for tile types 'basic', 'grasstop', and 'tree'
+	// liquid tiles do exist but they are funky and make gaps in surrounding tiles a lot of the time so idk
 	// this does fortunatly allow for modular tile colors so you can go into tile_colors.py and make whatever tile u want
 	draw_tile(x,y,z,tile) {
 		[x, y] = this.to_isometric(x,y,z,this.tile_size)

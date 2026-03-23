@@ -111,7 +111,7 @@ function generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance
 
 
 function get_form_inputs() {
-	// defaults
+	// this ones kinda self explanatory
 	let grid_size = document.getElementById('grid_size').value || 50
 	let biome_zoom = -document.getElementById('biome_size').value + 31 || 6
 	let height_variance = document.getElementById('height_variance').value || 9
@@ -128,7 +128,9 @@ function get_form_inputs() {
 	return [grid_size, biome_zoom, height_variance, tree_chance, canvas_padding, tile_thresholds]
 }
 
-function terrain_gen_listener() {
+// generate terrain when form submitted
+gen_form.addEventListener('submit', (event) => {
+	event.preventDefault()
 	generating_label.style.display = 'block'
 	ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2)
 
@@ -138,14 +140,9 @@ function terrain_gen_listener() {
 		generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance, tree_chance, tile_thresholds)	
 		generating_label.style.display = 'none'
 	}, 0);
-}
-
-
-gen_form.addEventListener('submit', (event) => {
-	event.preventDefault()
-	terrain_gen_listener()
 })
 
 
 // initial generation
-terrain_gen_listener()
+const [grid_size, biome_zoom, height_variance, tree_chance, canvas_padding, tile_thresholds] = get_form_inputs()
+generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance, tree_chance, tile_thresholds)	

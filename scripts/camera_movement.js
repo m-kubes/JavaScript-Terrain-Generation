@@ -14,7 +14,8 @@ function updateCanvas() {
     canvas.style.translate = `${currentDragOffsetX}px ${currentDragOffsetY}px`
 }
 
-
+// zooming
+// should account for current position at some point to make it not move weridly when zooming off center
 document.addEventListener("wheel", (event) => {
     // scroll direction
     const direction = event.deltaY < 0 ? 1 : -1; 
@@ -31,6 +32,7 @@ document.addEventListener("wheel", (event) => {
 });
 
 
+// dragging
 document.addEventListener('mousemove', (event) => {
     if (event.buttons === 1) {
         currentDragOffsetX = currentDragOffsetX + (event.movementX);
