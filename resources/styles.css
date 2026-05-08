@@ -37,7 +37,7 @@ main {
 }
 
 #gen_form {
-    width: 12%;
+    width: max(12%, 20rem);
     position: absolute;
     padding: 1.5rem;
     top: 1rem;
@@ -82,4 +82,15 @@ main {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+#generation_timer {
+    display: none;
+    padding: 1rem;
+    font-size: min(1vw, 1.5rem);
+    font-weight: 500;
+    color: var(--mid-gray);
+    position: absolute;
+    top: 0;
+    right: 0;
 }

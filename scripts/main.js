@@ -4,6 +4,7 @@ import canvas_bounds from './canvas_bounds.js';
 
 const gen_form = document.getElementById('gen_form');
 const generating_label = document.getElementById('generating_label');
+const generation_timer = document.getElementById('generation_timer');
 const canvas = document.getElementById('main-canvas');
 const ctx = canvas.getContext("2d");
 
@@ -105,6 +106,7 @@ function generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance
 
 	console.log(`Finished drawing ${scene_tiles.length} tiles in ${(Date.now() - done_sorting_time) / 1000} seconds`)
 	console.log(`Total generation time: ${(Date.now() - start_time) / 1000} seconds`)
+	return (Date.now() - start_time)
 }
 
 
@@ -132,13 +134,16 @@ function get_form_inputs() {
 gen_form.addEventListener('submit', (event) => {
 	event.preventDefault()
 	generating_label.style.display = 'block'
+	generation_timer.style.display = 'none'
 	ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2)
 
 	// put this in the next event loop so it updates before
 	setTimeout(() => {
 		const [grid_size, biome_zoom, height_variance, tree_chance, canvas_padding, tile_thresholds] = get_form_inputs()
-		generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance, tree_chance, tile_thresholds)	
+		const response_time = generate_terrain(grid_size, biome_zoom, canvas_padding, height_variance, tree_chance, tile_thresholds)	
 		generating_label.style.display = 'none'
+		generation_timer.textContent = `Generated in ${response_time} ms`
+		generation_timer.style.display = 'block'
 	}, 0);
 })
 
