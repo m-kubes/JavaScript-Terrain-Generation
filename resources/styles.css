@@ -30,6 +30,7 @@ main {
 }
 
 #main-canvas {
+    position: absolute;
     z-index: -1;
     width: 95vh;
     height: 95vh;
@@ -77,20 +78,24 @@ main {
 }
 
 #generating_label {
-    display: none;
+    display: block;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-#generation_timer {
+#generation_stats_container {
     display: none;
     padding: 1rem;
-    font-size: min(1vw, 1.5rem);
-    font-weight: 500;
-    color: var(--mid-gray);
     position: absolute;
     top: 0;
     right: 0;
+}
+
+#generation_stats_container * {
+    text-align: right;
+    font-size: min(2.5vw, 1rem);
+    font-weight: 500;
+    color: var(--mid-gray);
 }
