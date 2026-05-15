@@ -30,7 +30,6 @@ main {
 }
 
 #main-canvas {
-    position: absolute;
     z-index: -1;
     width: 95vh;
     height: 95vh;
